@@ -12,19 +12,22 @@ type BlogAccount struct {
 }
 
 type Category struct {
-	Id   string
+	Id   int
 	Name string
 }
 
 func GetCategories(ba *BlogAccount, options map[string]interface{}) (categories []*Category) {
 	response := xmlrpc.Request(ba.Url, "wp.getCategories", ba.BlogId, ba.UserName, ba.PassWord, options)
+	
 	for _, params := range response {
 		if params == nil {
 			return categories
 		}
 		for _, param := range params.([]interface{}) {
 			cat := &Category{}
-			cat.Id = param.(map[string]interface{})["categoryId"].(string)
+			categoryId := param.(map[string]interface{})["categoryId"].(int)
+			//catId,_ := strconv.Atoi(categoryId)
+			cat.Id = categoryId
 			cat.Name = param.(map[string]interface{})["categoryName"].(string)
 			categories = append(categories, cat)
 		}
@@ -57,7 +60,7 @@ func GetAuthors(ba *BlogAccount, options map[string]interface{}) (authors []*Aut
 }
 
 type Tag struct {
-	Id   string
+	Id   int
 	Name string
 }
 
@@ -69,7 +72,7 @@ func GetTags(ba *BlogAccount, options map[string]interface{}) (tags []*Tag) {
 		}
 		for _, param := range params.([]interface{}) {
 			tag := &Tag{}
-			tag.Id = param.(map[string]interface{})["tag_id"].(string)
+			tag.Id = param.(map[string]interface{})["tag_id"].(int)
 			tag.Name = param.(map[string]interface{})["name"].(string)
 			tags = append(tags, tag)
 		}
