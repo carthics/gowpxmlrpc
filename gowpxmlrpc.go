@@ -9,6 +9,7 @@ type BlogAccount struct {
 	UserName string
 	PassWord string
 	BlogId   string
+	PostId	 string
 }
 
 type Category struct {
@@ -26,7 +27,6 @@ func GetCategories(ba *BlogAccount, options map[string]interface{}) (categories 
 		for _, param := range params.([]interface{}) {
 			cat := &Category{}
 			categoryId := param.(map[string]interface{})["categoryId"].(int)
-			//catId,_ := strconv.Atoi(categoryId)
 			cat.Id = categoryId
 			cat.Name = param.(map[string]interface{})["categoryName"].(string)
 			categories = append(categories, cat)
@@ -89,6 +89,24 @@ func NewPost(ba *BlogAccount, options map[string]interface{}) (id string) {
 		id = params.(string)
 	}
 	return id
+}
+
+func EditPost(ba *BlogAccount, options map[string]interface{}) (isPostModified bool) {	
+	response := xmlrpc.Request(ba.Url, "wp.editPost", ba.BlogId, ba.UserName, ba.PassWord, ba.PostId, options)
+	
+	for _, params := range response {
+		isPostModified = params.(bool)
+	}
+	return isPostModified
+}
+
+func DeletePost(ba *BlogAccount, options map[string]interface{}) (isPostDeleted bool) {	
+	response := xmlrpc.Request(ba.Url, "wp.deletePost", ba.BlogId, ba.UserName, ba.PassWord, ba.PostId, options)
+	
+	for _, params := range response {
+		isPostDeleted = params.(bool)
+	}
+	return isPostDeleted
 }
 
 type File struct {
