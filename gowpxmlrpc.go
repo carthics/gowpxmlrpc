@@ -13,8 +13,9 @@ type BlogAccount struct {
 }
 
 type Category struct {
-	Id   int
-	Name string
+	Id   	 int
+	Name 	 string
+	UserName string
 }
 
 func GetCategories(ba *BlogAccount, options map[string]interface{}) (categories []*Category) {
@@ -29,6 +30,7 @@ func GetCategories(ba *BlogAccount, options map[string]interface{}) (categories 
 			categoryId := param.(map[string]interface{})["categoryId"].(int)
 			cat.Id = categoryId
 			cat.Name = param.(map[string]interface{})["categoryName"].(string)
+			cat.UserName = param.(map[string]interface{})["username"].(string)
 			categories = append(categories, cat)
 		}
 	}
